@@ -1,5 +1,6 @@
+from pathlib import Path
+
 import pandas as pd
-from pandas.core.generic import FilePath
 from pandas.testing import assert_frame_equal
 
 
@@ -47,7 +48,7 @@ def execute_sql_query() -> pd.DataFrame:
     return df
 
 
-def test_csv_structure(csv_file: FilePath):
+def test_csv_structure(csv_file: Path):
     """Проверяет структуру CSV-файла (столбцы и типы данных)"""
     df = pd.read_csv(csv_file)
     assert list(df.columns) == [
@@ -63,13 +64,13 @@ def test_csv_structure(csv_file: FilePath):
     assert pd.api.types.is_string_dtype(df['departure_airport_name'])
 
 
-def test_sort_order(csv_file: FilePath):
+def test_sort_order(csv_file: Path):
     """Проверяет сортировку по actual_arrival (DESC)"""
     df = pd.read_csv(csv_file, parse_dates=['actual_arrival'])
     assert df['actual_arrival'].is_monotonic_decreasing, "Данные не отсортированы по убыванию даты"
 
 
-def test_data_correctness(csv_file: FilePath):
+def test_data_correctness(csv_file: Path):
     """Сравнивает данные CSV с результатом SQL-запроса"""
     df_csv = pd.read_csv(csv_file)
     df_db = execute_sql_query()
